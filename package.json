@@ -13,6 +13,12 @@
     "ava": "^0.25.0",
     "typescript": "^2.7.2"
   },
+  "files": [
+    "**/*.js",
+    "**/*.d.ts",
+    "!test",
+    "!types/**/*.js"
+  ],
   "ava": {
     "files": [
       "test/**/*.js"
