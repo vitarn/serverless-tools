@@ -2,7 +2,7 @@ import test from 'ava'
 import { Probe } from '../probe/probe'
 
 test('Probe get provider aws', t => {
-    const probe = new Probe({ AWS_REGION: 'cn-north-1' })
+    const probe = new Probe({ AWS_LAMBDA_FUNCTION_NAME: 'hello' })
 
     t.is(probe.provider, 'aws')
 })

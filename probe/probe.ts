@@ -11,7 +11,7 @@ export class Probe {
     }
 
     get provider() {
-        if (this.env.AWS_REGION) return 'aws'
+        if ('AWS_LAMBDA_FUNCTION_NAME' in this.env) return 'aws'
     }
 
     get nodeEnv() {
