@@ -2,7 +2,7 @@
   "name": "serverless-tools",
   "version": "0.0.1",
   "scripts": {
-    "build": "tsc",
+    "prepare": "tsc",
     "test": "ava",
     "testing": "ava -w"
   },

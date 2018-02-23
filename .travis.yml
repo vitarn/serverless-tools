@@ -1,15 +1,22 @@
 language: node_js
 node_js:
-  - node
-
+- node
+- 8
+- 6
+- 4
+cache: yarn
 branches:
   only:
-    - master
-
-cache: yarn
-
-before_script:
-  - yarn build
-
+  - master
+  - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 notifications:
   email: false
+deploy:
+  provider: npm
+  skip_cleanup: true
+  email: $NPM_EMAIL
+  api_key: $NPM_TOKEN
+  on:
+    tags: true
+    repo: vitarn/serverless-tools
+    node: node
