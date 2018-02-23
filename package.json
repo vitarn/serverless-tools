@@ -1,0 +1,11 @@
+{
+  "name": "serverless-tools",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo wip"
+  },
+  "devDependencies": {
+    "typescript": "^2.7.2"
+  }
+}
