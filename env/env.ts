@@ -1,9 +1,7 @@
-const { env } = process
-
 /**
  * Setup PROVIDER
  */
-export function setupEnv_PROVIDER() {
+export function setupEnv_PROVIDER(env = process.env) {
     if (env.AWS_REGION) {
         env.PROVIDER = 'aws'
     }
@@ -12,7 +10,7 @@ export function setupEnv_PROVIDER() {
 /**
  * Setup NODE_ENV
  */
-export function setupEnv_NODE_ENV() {
+export function setupEnv_NODE_ENV(env = process.env) {
     if (env.NODE_ENV) return
 
     const {

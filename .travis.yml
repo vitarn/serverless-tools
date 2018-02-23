@@ -8,5 +8,8 @@ branches:
 
 cache: yarn
 
+before_script:
+  - yarn build
+
 notifications:
   email: false
