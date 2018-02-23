@@ -4,7 +4,8 @@
   "scripts": {
     "prepare": "tsc",
     "test": "ava",
-    "testing": "ava -w"
+    "testing": "ava -w",
+    "release": "git release `node -e \"console.log('v'+require('./package').version)\"` -c"
   },
   "devDependencies": {
     "@types/aws-lambda": "^0.0.32",
