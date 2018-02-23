@@ -7,6 +7,7 @@
     "testing": "ava -w"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^0.0.32",
     "@types/node": "^9.4.6",
     "ava": "^0.25.0",
     "typescript": "^2.7.2"
@@ -19,5 +20,6 @@
       "**/*.{js}"
     ],
     "verbose": true
-  }
+  },
+  "dependencies": {}
 }
