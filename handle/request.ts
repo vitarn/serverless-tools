@@ -7,7 +7,7 @@ export type Context = AwsContext
 export class Request {
     event: Event
     context: Context
-    _cache: any
+    private _cache: any
 
     constructor(event: Event, context: Context) {
         if (typeof event === 'string' /* aliyun */) {
@@ -58,6 +58,7 @@ export class Request {
             try {
                 this._cache.json = JSON.parse(this.body)
             } catch (err) {
+                console.error(err)
                 this._cache.json = null
             }
         }
