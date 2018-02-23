@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "moduleResolution": "node",
+        "module": "commonjs",
+        "declaration": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "target": "es5",
+        "skipLibCheck": true,
+        "lib": [
+            "esnext"
+        ]
+    },
+    "include": [
+        "**/*.ts"
+    ],    
+    "exclude": [
+        "node_modules"
+    ],
+    "compileOnSave": true
+}
