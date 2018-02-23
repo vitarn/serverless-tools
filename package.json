@@ -3,9 +3,21 @@
   "version": "0.0.1",
   "scripts": {
     "build": "tsc",
-    "test": "echo wip"
+    "test": "ava",
+    "testing": "ava -w"
   },
   "devDependencies": {
+    "@types/node": "^9.4.6",
+    "ava": "^0.25.0",
     "typescript": "^2.7.2"
+  },
+  "ava": {
+    "files": [
+      "test/**/*.js"
+    ],
+    "source": [
+      "**/*.{js}"
+    ],
+    "verbose": true
   }
 }
