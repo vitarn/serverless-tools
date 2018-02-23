@@ -2,9 +2,10 @@
   "name": "serverless-tools",
   "version": "0.0.1",
   "scripts": {
-    "build": "tsc",
+    "prepare": "tsc",
     "test": "ava",
-    "testing": "ava -w"
+    "testing": "ava -w",
+    "release": "git release `node -e \"console.log('v'+require('./package').version)\"` -c"
   },
   "devDependencies": {
     "@types/aws-lambda": "^0.0.32",
@@ -12,6 +13,12 @@
     "ava": "^0.25.0",
     "typescript": "^2.7.2"
   },
+  "files": [
+    "**/*.js",
+    "**/*.d.ts",
+    "!test",
+    "!types/**/*.js"
+  ],
   "ava": {
     "files": [
       "test/**/*.js"
