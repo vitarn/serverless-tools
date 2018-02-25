@@ -31,7 +31,17 @@ exports.hello = handle((req, res) => {
 Generate a report for serverless function runtime environment.
 
 ```js
+const probe = require('serverless-tools/probe')
 
+console.log(probe())
+
+{
+    os: { },
+    process: {
+        env: { },
+    },
+    'aws-sdk': { },
+}
 ```
 
 ### evaluate
