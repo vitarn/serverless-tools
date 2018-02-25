@@ -11,12 +11,17 @@ branches:
   - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 script:
 - npx nyc --reporter=lcov npm test
-after_success:
-- npx codecov
+# after_success:
+# - npx codecov
 notifications:
   email: false
 deploy:
-  provider: npm
+- provider: script
+  script: npx codecov
+  on:
+    repo: vitarn/serverless-tools
+    node: node
+- provider: npm
   skip_cleanup: true
   email: $NPM_EMAIL
   api_key: $NPM_TOKEN
