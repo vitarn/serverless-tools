@@ -9,7 +9,10 @@ branches:
   only:
   - master
   - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
-after_success: npx codecov
+script:
+- npx nyc --reporter=lcov npm test
+after_success:
+- npx codecov
 notifications:
   email: false
 deploy:
