@@ -1,4 +1,20 @@
 
+v0.0.2 / 2018-02-26
+===================
+
+## New:
+  1. Rename `probe` to `evaluate`
+  2. The new `probe` report a full feature lists.
+  3. Active [codecov](codecov.io)
+
+  * Add more test
+  * Generate inline source map
+  * Update readme probe
+  * Add more badge
+  * Use npx install nyc and codecov in travis
+  * Add codecov to travis
+  * Refactor
+
 v0.0.1 / 2018-02-24
 ===================
 
