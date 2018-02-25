@@ -1,3 +1,2 @@
-import { Probe, Report } from './probe'
-
-export default new Probe().scan()
+export * from './probe'
+export * from './handler'
