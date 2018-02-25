@@ -19,12 +19,7 @@ script:
   - npx nyc --reporter=lcov npm test
 
 after_success:
-  # - npx codecov
-  - echo TRAVIS_BUILD_ID $TRAVIS_BUILD_ID
-  - echo TRAVIS_BUILD_NUMBER $TRAVIS_BUILD_NUMBER
-  - echo TRAVIS_JOB_ID $TRAVIS_JOB_ID
-  - echo TRAVIS_JOB_NUMBER $TRAVIS_JOB_NUMBER
-  - echo TRAVIS_NODE_VERSION $TRAVIS_NODE_VERSION
+  - npx codecov
 
 notifications:
   email: false
