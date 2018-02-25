@@ -16,10 +16,10 @@ before_install:
   - which npx || yarn global add npx
 
 script:
-  - npx nyc --reporter=lcov npm test
+  - npx nyc npm test
 
 after_success:
-  - '[ $TRAVIS_NODE_VERSION = node ] && npx codecov'
+  - '[ $TRAVIS_NODE_VERSION = node ] && npx nyc report --reporter=text-lcov > coverage.lcov && npx codecov'
 
 notifications:
   email: false
