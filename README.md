@@ -1,7 +1,12 @@
 # serverless-tools
-Serverless toolbox
 
-[![Build Status](https://travis-ci.org/vitarn/serverless-tools.svg?branch=master)](https://travis-ci.org/vitarn/serverless-tools)
+[![Serverless][ico-serverless]][link-serverless]
+[![License][ico-license]][link-license]
+[![NPM][ico-npm]][link-npm]
+[![Build Status][ico-build]][link-build]
+[![Coverage Status][ico-codecov]][link-codecov]
+
+Serverless toolbox
 
 ## Install
 
@@ -58,3 +63,15 @@ console.log(process.env)
     ...
 }
 ```
+
+[ico-serverless]: http://public.serverless.com/badges/v3.svg
+[ico-license]: https://img.shields.io/github/license/vitarn/serverless-tools.svg
+[ico-npm]: https://img.shields.io/npm/v/serverless-tools.svg
+[ico-build]: https://travis-ci.org/vitarn/serverless-tools.svg?branch=master
+[ico-codecov]: https://codecov.io/gh/vitarn/serverless-tools/branch/master/graph/badge.svg
+
+[link-serverless]: http://www.serverless.com/
+[link-license]: ./blob/master/LICENSE
+[link-npm]: https://www.npmjs.com/package/serverless-tools
+[link-build]: https://travis-ci.org/vitarn/serverless-tools
+[link-codecov]: https://codecov.io/gh/vitarn/serverless-tools
