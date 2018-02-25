@@ -19,7 +19,7 @@ script:
   - npx nyc --reporter=lcov npm test
 
 after_success:
-  - [ $TRAVIS_NODE_VERSION = node ] && npx codecov
+  - '[ $TRAVIS_NODE_VERSION = node ] && npx codecov'
 
 notifications:
   email: false
