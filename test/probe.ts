@@ -1,35 +1,18 @@
 import test from 'ava'
-import { Probe } from '../probe/probe'
+import { probe } from '../probe'
+import { handler } from '../probe'
 
-test('Probe get provider aws', t => {
-    const probe = new Probe({ AWS_LAMBDA_FUNCTION_NAME: 'hello' })
+test('probe include os and process report', t => {
+    const report = probe()
 
-    t.is(probe.provider, 'aws')
+    t.truthy(report.os)
+    t.truthy(report.process)
 })
 
-test('Probe get nodeEnv test', t => {
-    const probe = new Probe()
+test('handler is a lambda handler', t => {
+    let body
+    const cb = (err, data) => body = data.body
+    const res = handler({}, {}, cb)
 
-    t.is(probe.nodeEnv, 'test')
-})
-
-test('Probe get nodeEnv default production', t => {
-    const probe = new Probe({})
-
-    t.is(probe.nodeEnv, 'production')
-})
-
-test('Probe get nodeEnv development by aws lambda log group name', t => {
-    const probe = new Probe({ AWS_LAMBDA_LOG_GROUP_NAME: '/aws/lambda/demo-dev-hello' })
-    
-    
-    t.is(probe.nodeEnv, 'development')
-})
-
-test('Probe get nodeEnv development by aws lambda function name', t => {
-
-    const probe = new Probe({ AWS_LAMBDA_FUNCTION_NAME: 'demo-dev-hello' })
-
-
-    t.is(probe.nodeEnv, 'development')
+    t.is(typeof body, 'string')
 })

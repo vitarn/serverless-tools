@@ -1,40 +1,87 @@
-export interface Report {
-    provider?: 'aws' | 'qcloud' | 'aliyun'
-    nodeEnv: 'development' | 'production'
+import os from 'os'
+
+const OS_DEPRECATED_METHODS = ['getNetworkInterfaces', 'tmpDir']
+
+function _try(f) {
+    try {
+        return f()
+    } catch (err) {
+        return err.message
+    }
 }
 
-export class Probe {
-    env: NodeJS.ProcessEnv
+export function probe() {
+    const osReport = Object.keys(os)
+        .filter(key => typeof os[key] === 'function')
+        .filter(key => OS_DEPRECATED_METHODS.indexOf(key) === -1)
+        .reduce((acc, key) => Object.assign(
+            acc,
+            {
+                [`${key}()`]: _try(os[key])
+            },
+        ), {})
 
-    constructor(env: NodeJS.ProcessEnv = process.env) {
-        this.env = env
+    const processProps = `
+        title
+        version versions
+        arch platform release features
+        argv argv0 execArgv execPath execPath
+        pid ppid
+        moduleLoadList
+        config`
+        .split(/\s+/)
+        .filter(key => !!key)
+        .reduce((acc, key) => Object.assign(
+            acc,
+            {
+                [key]: process[key]
+            },
+        ), {})
+
+    const processMethods = `
+        cwd
+        umask getuid geteuid getgid getegid getgroups
+        hrtime cpuUsage uptime memoryUsage`
+        .split(/\s+/)
+        .filter(key => !!key)
+        .reduce((acc, key) => Object.assign(
+            acc,
+            {
+                [`${key}()`]: _try(process[key])
+            },
+        ), {})
+
+    const processEnv = Object.keys(process.env)
+        .reduce((acc, key) => Object.assign(
+            acc,
+            {
+                [key]: /_(key|token)/i.test(key)
+                    ? '***'
+                    : process.env[key]
+            },
+        ), {})
+
+    const processReport = Object.assign(
+        {},
+        processProps,
+        processMethods,
+        {
+            env: processEnv,
+        },
+    )
+
+    const data = {
+        os: osReport,
+        process: processReport,
     }
 
-    get provider() {
-        if ('AWS_LAMBDA_FUNCTION_NAME' in this.env) return 'aws'
+    try {
+        const AWS = require('aws-sdk')
+        data['aws-sdk'] = {
+            VERSION: AWS.VERSION
+        }
+    } catch (err) {
     }
 
-    get nodeEnv() {
-        if (this.env.NODE_ENV) return this.env.NODE_ENV
-
-        const {
-            AWS_LAMBDA_LOG_GROUP_NAME: logName = '',
-            AWS_LAMBDA_FUNCTION_NAME: funcName = ''
-        } = this.env
-        const fixture = [logName, funcName].join('')
-
-        if (fixture.includes('-dev-')) return 'development'
-        
-        return 'production'
-    }
-
-    /**
-     * Grep report from current environment.
-     */
-    scan() {
-        return {
-            provider: this.provider,
-            nodeEnv: this.nodeEnv,
-        } as Report
-    }
+    return data
 }

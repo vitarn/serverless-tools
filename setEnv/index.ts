@@ -3,9 +3,11 @@ Side effect module.
 Import and execute env setup functions
 */
 
-import probe from '../probe'
+import { evaluate } from '../evaluate'
+
+const report = evaluate()
 
 Object.assign(process.env, {
-    PROVIDER: probe.provider,
-    NODE_ENV: probe.nodeEnv,
+    PROVIDER: report.provider,
+    NODE_ENV: report.nodeEnv,
 })
