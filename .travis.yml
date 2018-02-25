@@ -19,7 +19,7 @@ script:
   - npx nyc yarn test
 
 after_success:
-  - '[ $TRAVIS_NODE_VERSION = node ] && npx nyc report --reporter=lcov && npx codecov'
+  - '[ $TRAVIS_NODE_VERSION = node ] && npx nyc report && npx codecov'
 
 notifications:
   email: false
