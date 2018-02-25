@@ -7,6 +7,12 @@ test('Evaluate get provider aws', t => {
     t.is(report.provider, 'aws')
 })
 
+test('Evaluate get provider unknown', t => {
+    const report = new Evaluate({})
+
+    t.is(report.provider, 'unknown')
+})
+
 test('Evaluate get nodeEnv test', t => {
     const report = new Evaluate()
 

@@ -58,7 +58,7 @@ export class Request {
             try {
                 this._cache.json = JSON.parse(this.body)
             } catch (err) {
-                console.error(err)
+                // console.error(err)
                 this._cache.json = null
             }
         }
