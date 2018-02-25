@@ -33,8 +33,43 @@ test('Request aws POST /hello', t => {
 
     t.is(req.path, '/hello')
     t.is(req.method, 'POST')
+    t.is(req.headers['Content-Type'], 'application/json')
     t.deepEqual(req.body, '{"a":1}')
     t.deepEqual(req.json, { a: 1 })
+})
+
+test('Request aliyun GET /hello', t => {
+    const event = JSON.stringify({
+        "path": "/hello",
+        "httpMethod": "GET",
+        "headers": {},
+        "queryParameters": {
+            "a": "1"
+        },
+    }) as any
+    const req = new Request(event, {} as any)
+
+    t.is(req.path, '/hello')
+    t.is(req.method, 'GET')
+    t.deepEqual(req.query, { a: '1' })
+})
+
+
+
+test('Request POST /hello with invalid json', t => {
+    const event = {
+        "path": "/hello",
+        "httpMethod": "POST",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "body": "{a:1}",
+        "isBase64Encoded": false
+    } as any
+    const req = new Request(event, {} as any)
+
+    t.is(req.body, '{a:1}')
+    t.is(req.json, null)
 })
 
 test('Response aws default', t => {
@@ -52,10 +87,19 @@ test('Response aws null', t => {
     t.is(res.status, 204)
 })
 
+test('Response aws string', t => {
+    const res = new Response(() => { })
+    res.send('hello')
+
+    t.is(res.status, 200)
+    t.is(res.type, 'text/plain')
+})
+
 test('Response aws json', t => {
     const res = new Response(() => { })
     res.send({ a: 1 })
 
+    t.is(res.status, 200)
     t.is(res.type, 'application/json')
 })
 
