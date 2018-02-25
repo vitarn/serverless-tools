@@ -1,4 +1,13 @@
 
+v0.0.3 / 2018-02-26
+===================
+
+## New:
+  1. Add probe handler title
+
+  * Add test for probe handler title
+  * Add probe report title
+
 v0.0.2 / 2018-02-26
 ===================
 
