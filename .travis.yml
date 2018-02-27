@@ -12,9 +12,14 @@ branches:
 
 cache: yarn
 
-before_install: which npx || yarn global add npx
-script: yarn build && npx nyc yarn test
-after_success: npx nyc report --reporter=lcov && npx codecov
+before_install:
+  - which npx || yarn global add npx
+
+script:
+  - yarn build && npx nyc yarn test
+
+after_success:
+  - npx nyc report --reporter=lcov && npx codecov
 
 stages:
   - test
