@@ -22,17 +22,21 @@ script:
   - npx nyc yarn test
 
 after_success:
-  - '[ $TRAVIS_NODE_VERSION = node ] && npx nyc report --reporter=lcov && npx codecov'
+  - npx nyc report --reporter=lcov && npx codecov'
 
 notifications:
   email: false
 
-deploy:
-  - provider: npm
-    skip_cleanup: true
-    email: $NPM_EMAIL
-    api_key: $NPM_TOKEN
-    on:
-      tags: true
-      repo: vitarn/serverless-tools
-      node: node
+jobs:
+  include:
+    - stage: npm publish
+      node_js: node
+      script: echo "Deploying to npm ..."
+      deploy:
+        provider: npm
+        email: $NPM_EMAIL
+        api_key: $NPM_TOKEN
+        on:
+          tags: true
+          repo: vitarn/serverless-tools
+          node: node
