@@ -43,7 +43,7 @@ export class Response {
             this.body = data
         } else if (typeof data === 'object') {
             this.type = 'application/json'
-            this.body = JSON.stringify(data)
+            this.body = data
         }
         this.end()
     }
