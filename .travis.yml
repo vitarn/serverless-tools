@@ -1,4 +1,9 @@
 language: node_js
+node_js:
+  - node
+  - 8
+  - 6
+  - 4
 
 branches:
   only:
@@ -13,11 +18,6 @@ notifications:
 jobs:
   include:
     - stage: test
-      node_js:
-        - node
-        - 8
-        - 6
-        - 4
       before_install: which npx || yarn global add npx
       before_script: yarn build
       script: npx nyc yarn test
