@@ -13,8 +13,7 @@ branches:
 cache: yarn
 
 before_install: which npx || yarn global add npx
-before_script: yarn build
-script: npx nyc yarn test
+script: yarn build && npx nyc yarn test
 after_success: npx nyc report --reporter=lcov && npx codecov
 
 stages:
@@ -26,8 +25,10 @@ jobs:
   include:
     - stage: deploy
       script: skip
+      after_success: skip
       deploy:
         provider: npm
+        skip_cleanup: true
         email: $NPM_EMAIL
         api_key: $NPM_TOKEN
         on:
