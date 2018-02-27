@@ -8,6 +8,7 @@
     "release": "git release `node -e \"console.log('v'+require('./package').version)\"` -c",
     "prepack": "tsc --removeComments --inlineSourceMap false"
   },
+  "dependencies": {},
   "devDependencies": {
     "@types/aws-lambda": "^0.0.32",
     "@types/node": "^9.4.6",
@@ -28,6 +29,5 @@
       "**/*.{js}"
     ],
     "verbose": true
-  },
-  "dependencies": {}
+  }
 }

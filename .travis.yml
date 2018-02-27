@@ -5,34 +5,35 @@ node_js:
   - 6
   - 4
 
-cache: yarn
-
 branches:
   only:
     - master
     - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 
-before_install:
-  - which npx || yarn global add npx
+cache: yarn
 
-before_script:
-  - yarn build
+before_install: which npx || yarn global add npx
+before_script: yarn build
+script: npx nyc yarn test
+after_success: npx nyc report --reporter=lcov && npx codecov
 
-script:
-  - npx nyc yarn test
+stages:
+  - test
+  - name: deploy
+    if: tag IS present
 
-after_success:
-  - '[ $TRAVIS_NODE_VERSION = node ] && npx nyc report --reporter=lcov && npx codecov'
+jobs:
+  include:
+    - stage: deploy
+      script: skip
+      deploy:
+        provider: npm
+        email: $NPM_EMAIL
+        api_key: $NPM_TOKEN
+        on:
+          tags: true
+          repo: vitarn/serverless-tools
+          node: node
 
 notifications:
   email: false
-
-deploy:
-  - provider: npm
-    skip_cleanup: true
-    email: $NPM_EMAIL
-    api_key: $NPM_TOKEN
-    on:
-      tags: true
-      repo: vitarn/serverless-tools
-      node: node
