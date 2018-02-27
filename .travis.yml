@@ -15,6 +15,11 @@ cache: yarn
 notifications:
   email: false
 
+stages:
+  - test
+  - name: deploy
+    if: tag IS present
+
 jobs:
   include:
     - stage: test
@@ -23,7 +28,7 @@ jobs:
       script: npx nyc yarn test
       after_success: npx nyc report --reporter=lcov && npx codecov'
 
-    - stage: npm publish
+    - stage: deploy
       node_js: node
       deploy:
         provider: npm
