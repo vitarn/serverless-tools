@@ -15,6 +15,9 @@ branches:
 before_install:
   - which npx || yarn global add npx
 
+before_script:
+  - yarn build
+
 script:
   - npx nyc yarn test
 
