@@ -15,7 +15,7 @@ cache: yarn
 before_install: which npx || yarn global add npx
 before_script: yarn build
 script: npx nyc yarn test
-after_success: npx nyc report --reporter=lcov && npx codecov'
+after_success: npx nyc report --reporter=lcov && npx codecov
 
 stages:
   - test
@@ -25,7 +25,7 @@ stages:
 jobs:
   include:
     - stage: deploy
-      node_js: node
+      script: skip
       deploy:
         provider: npm
         email: $NPM_EMAIL
