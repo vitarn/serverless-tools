@@ -3,7 +3,7 @@ import { probe } from '../probe'
 import { handler } from '../probe'
 
 test('probe include os and process report', t => {
-    const report = probe()
+    let report = probe()
 
     t.truthy(report.os)
     t.truthy(report.process)
@@ -11,8 +11,14 @@ test('probe include os and process report', t => {
 
 test('handler is a lambda handler', t => {
     let body
-    const cb = (err, data) => body = data.body
-    const res = handler({}, {}, cb)
+    let cb = (err, data) => body = data.body
+    let res = handler({}, {}, cb)
 
     t.is(typeof body, 'string')
+
+    let json = JSON.parse(body)
+
+    t.truthy(json.title)
+    t.truthy(json.event)
+    t.truthy(json.context)
 })

@@ -1,11 +1,12 @@
 {
   "name": "serverless-tools",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "scripts": {
-    "prepare": "tsc",
+    "build": "tsc",
     "test": "ava",
     "testing": "ava -w",
-    "release": "git release `node -e \"console.log('v'+require('./package').version)\"` -c"
+    "release": "git release `node -e \"console.log('v'+require('./package').version)\"` -c",
+    "prepack": "tsc --removeComments --inlineSourceMap false"
   },
   "devDependencies": {
     "@types/aws-lambda": "^0.0.32",

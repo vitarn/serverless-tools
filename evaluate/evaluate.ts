@@ -12,6 +12,7 @@ export class Evaluate {
 
     get provider() {
         if ('AWS_LAMBDA_FUNCTION_NAME' in this.env) return 'aws'
+        if (this.env.HOME === '/home/qcloud') return 'qcloud'
         return 'unknown'
     }
 
