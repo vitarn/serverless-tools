@@ -1,4 +1,16 @@
 
+v0.0.4 / 2018-02-27
+===================
+
+## Break:
+  1. Don't stringify json in `handle` response
+
+## New:
+  1. Evaluate provider qcloud
+
+  * Handle response don't stringify json
+  * Evaluate understand qcloud
+
 v0.0.3 / 2018-02-26
 ===================
 
