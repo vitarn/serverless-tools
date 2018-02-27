@@ -12,8 +12,10 @@ branches:
 
 cache: yarn
 
-notifications:
-  email: false
+before_install: which npx || yarn global add npx
+before_script: yarn build
+script: npx nyc yarn test
+after_success: npx nyc report --reporter=lcov && npx codecov'
 
 stages:
   - test
@@ -23,11 +25,6 @@ stages:
 jobs:
   include:
     - stage: test
-      before_install: which npx || yarn global add npx
-      before_script: yarn build
-      script: npx nyc yarn test
-      after_success: npx nyc report --reporter=lcov && npx codecov'
-
     - stage: deploy
       node_js: node
       deploy:
@@ -38,3 +35,6 @@ jobs:
           tags: true
           repo: vitarn/serverless-tools
           node: node
+
+notifications:
+  email: false
