@@ -1,37 +1,30 @@
 language: node_js
-node_js:
-  - node
-  - 8
-  - 6
-  - 4
-
-cache: yarn
 
 branches:
   only:
     - master
     - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
 
-before_install:
-  - which npx || yarn global add npx
-
-before_script:
-  - yarn build
-
-script:
-  - npx nyc yarn test
-
-after_success:
-  - npx nyc report --reporter=lcov && npx codecov'
+cache: yarn
 
 notifications:
   email: false
 
 jobs:
   include:
+    - stage: test
+      node_js:
+        - node
+        - 8
+        - 6
+        - 4
+      before_install: which npx || yarn global add npx
+      before_script: yarn build
+      script: npx nyc yarn test
+      after_success: npx nyc report --reporter=lcov && npx codecov'
+
     - stage: npm publish
       node_js: node
-      script: echo "Deploying to npm ..."
       deploy:
         provider: npm
         email: $NPM_EMAIL
