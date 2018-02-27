@@ -25,7 +25,7 @@ jobs:
   include:
     - stage: deploy
       script: skip
-      after_success: skip
+      after_success: echo Ready deploy...
       deploy:
         provider: npm
         skip_cleanup: true
