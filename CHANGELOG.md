@@ -1,4 +1,14 @@
 
+v0.0.6 / 2018-03-03
+===================
+
+## New:
+  1. Add `httpless`
+  2. Add `microless`
+
+  * Remove travis node4
+  * Add microless
+
 v0.0.5 / 2018-02-28
 ===================
 
