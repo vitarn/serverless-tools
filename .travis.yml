@@ -3,7 +3,6 @@ node_js:
   - node
   - 8
   - 6
-  - 4
 
 branches:
   only:
@@ -12,10 +11,11 @@ branches:
 
 cache: yarn
 
-before_install: which npx || yarn global add npx
-before_script: yarn build
-script: npx nyc yarn test
-after_success: npx nyc report --reporter=lcov && npx codecov
+before_install:
+  - which npx || yarn global add npx
+
+after_success:
+  - npx codecov
 
 stages:
   - test
@@ -26,8 +26,10 @@ jobs:
   include:
     - stage: deploy
       script: skip
+      after_success: echo Ready deploy...
       deploy:
         provider: npm
+        skip_cleanup: true
         email: $NPM_EMAIL
         api_key: $NPM_TOKEN
         on:
