@@ -5,7 +5,7 @@
     "build": "tsc",
     "test": "jest",
     "testing": "jest --watch",
-    "coverage": "jest --coverage",
+    "coverage": "jest --coverage --maxWorkers=4",
     "typecheck": "tsc --noEmit",
     "release": "git release `node -e \"console.log('v'+require('./package').version)\"` -c",
     "prepack": "tsc --removeComments --inlineSourceMap false | echo shut up"
