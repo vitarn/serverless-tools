@@ -14,16 +14,22 @@ Serverless toolbox
 
 ## Examples
 
-### handle
+### httpless
 
 A more node-style way to write your handler functions.
 
 ```js
-const handle = require('serverless-tools/handle')
+const httpless = require('serverless-tools/httpless')
 
-exports.hello = handle((req, res) => {
-    res.send(`Hello ${req.query.name || 'Man'}!`)
+exports.hello = httpless((req, res) => {
+    res.end(`Hello ${req.query.name || 'gays'}! -- Provide by ${req.provider}`)
 })
+
+{
+    statusCode: 200,
+    headers: {},
+    body: 'Hello gays! -- Provide by aws'
+}
 ```
 
 ### probe
@@ -74,6 +80,38 @@ console.log(process.env)
 }
 ```
 
+### microless
+
+A [micro][link-micro]-style way to write your handler functions.
+
+```js
+const microless = require('serverless-tools/microless')
+const { json, send, sendError } microless
+
+exports.hello = microless(() => {
+    return 'Hello world'
+})
+
+exports.ok = microless((req, res) => {
+    send(res, 200, 'ok')
+})
+
+exports.auth = microless((req, res) => {
+    if (!auth(req)) return sendError(res, )
+    send(res, 200, 'welcome')
+})
+
+exports.private = microless((req, res) => {
+    if (!isAdmin(req)) {
+        const err = new Error('admin only')
+        err.status = 401
+        throw err
+    }
+    send(res, 200, 'welcome admin')
+})
+
+```
+
 [ico-serverless]: http://public.serverless.com/badges/v3.svg
 [ico-license]: https://img.shields.io/github/license/vitarn/serverless-tools.svg
 [ico-npm]: https://img.shields.io/npm/v/serverless-tools.svg
@@ -85,3 +123,5 @@ console.log(process.env)
 [link-npm]: https://www.npmjs.com/package/serverless-tools
 [link-build]: https://travis-ci.org/vitarn/serverless-tools
 [link-codecov]: https://codecov.io/gh/vitarn/serverless-tools
+
+[link-micro]: https://github.com/zeit/micro
