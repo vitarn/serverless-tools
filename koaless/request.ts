@@ -10,6 +10,8 @@ import { Application } from './application'
 import { Context } from './context'
 import { Response } from './response'
 
+import { AwsAPIGatewayEvent, QcloudAPIGatewayEvent, AliyunAPIGatewayEvent } from '../types'
+
 export class Request {
     app: Application
     ctx: Context
@@ -68,9 +70,9 @@ export class Request {
     }
 
     get query() {
-        return this.req.event.queryStringParameters
-            || this.req.event.queryString /* qcloud */
-            || this.req.event.queryParameters /* aliyun */
+        return (<AwsAPIGatewayEvent>this.req.event).queryStringParameters
+            || (<QcloudAPIGatewayEvent>this.req.event).queryString
+            || (<AliyunAPIGatewayEvent>this.req.event).queryParameters
             || {}
     }
 

@@ -14,7 +14,7 @@ import httpless from '../httpless'
 import { Request as HttplessRequest } from '../httpless/request'
 import { Response as HttplessResponse } from '../httpless/response'
 
-import { Event, Context as _Context, Callback } from '../types'
+import { APIGatewayEvent, Context as _Context, Callback } from '../types'
 
 export class Application {
     proxy = true

@@ -14,6 +14,10 @@ cache: yarn
 before_install:
   - which npx || yarn global add npx
 
+script:
+  - yarn typecheck
+  - yarn coverage
+
 after_success:
   - npx codecov
 
