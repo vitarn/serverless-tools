@@ -86,28 +86,31 @@ A [micro][link-micro]-style way to write your handler functions.
 
 ```js
 const microless = require('serverless-tools/microless')
-const { json, send, sendError } microless
+const { json, send, sendError, createError } microless
 
 exports.hello = microless(() => {
     return 'Hello world'
 })
 
 exports.ok = microless((req, res) => {
-    send(res, 200, 'ok')
+    send(res, 200, { message: 'ok' })
 })
 
 exports.auth = microless((req, res) => {
-    if (!auth(req)) return sendError(res, )
+    if (!auth(req)) throw createError(401, 'Must signin first')
     send(res, 200, 'welcome')
 })
 
-exports.private = microless((req, res) => {
-    if (!isAdmin(req)) {
-        const err = new Error('admin only')
-        err.status = 401
-        throw err
+exports.download = microless((req, res) => {
+    if (limited) {
+        const err = new Error('Bandwidth limit exceeded')
+        err.status = 509
+        err.expose = true
+        sendError(req, res, err)
+        return
     }
-    send(res, 200, 'welcome admin')
+
+    send(res, 200, base64Content)
 })
 
 ```

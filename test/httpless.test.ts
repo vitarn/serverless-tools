@@ -132,6 +132,18 @@ describe('httpless', () => {
             })
         })
 
+        describe('writeHead', () => {
+            test('it set headersSent to true', () => {
+                res.writeHead(200)
+                expect(res.headersSent).toBe(true)
+            })
+
+            test('it cannot set header after writeHead', () => {
+                res.writeHead(200)
+                expect(() => res.setHeader('a', 1)).toThrow('Cannot set headers after they are sent to the client')
+            })
+        })
+
         describe('write', () => {
             test('it always return false', () => {
                 expect(res.write('')).toBe(false)
@@ -150,6 +162,28 @@ describe('httpless', () => {
         })
 
         describe('end', () => {
+            test('it always return false', () => {
+                expect(res.end()).toBe(false)
+            })
+
+            test('it wont throw', () => {
+                for (let v of [
+                    null, undefined,
+                    {},
+                    true, 1,
+                    new Error, new Buffer(''),
+                ]) {
+                    expect(() => new Response(() => {}).end(v)).not.toThrow()
+                }
+            })
+
+            test('it set finished to true', () => {
+                expect(res.finished).toBe(false)
+                res.end()
+                expect(res.finished).toBe(true)
+                expect(() => res.write('')).toThrow('write after end')
+            })
+
             test('it throw error to api gateway', () => {
                 let err = new Error('take this')
                 res.end(err)

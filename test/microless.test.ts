@@ -93,7 +93,7 @@ describe('microless', () => {
             } as any
         )
 
-        test('enhance request similar koa', () => {
+        it('enhance request similar koa', () => {
             expect(req.origin).toBe('https://example.com')
             expect(req.href).toBe('https://example.com/hello?a=1')
             expect(req.path).toBe('/hello')
@@ -122,7 +122,7 @@ describe('microless', () => {
             spy = sinon.spy()
         })
 
-        test('it return string', async () => {
+        it('return string', async () => {
             await microless(() => 'ok')({} as any, {} as any, spy)
 
             expect(spy.args[0]).toEqual([null, {
@@ -132,7 +132,7 @@ describe('microless', () => {
             }])
         })
 
-        test('it send string', async () => {
+        it('send string', async () => {
             await microless((req, res) => {
                 send(res, 200, 'ok')
             })({} as any, {} as any, spy)
@@ -144,7 +144,7 @@ describe('microless', () => {
             }])
         })
 
-        test('it return null', async () => {
+        it('return null', async () => {
             await microless((req, res) => {
                 return null
             })({} as any, {} as any, spy)
@@ -156,7 +156,7 @@ describe('microless', () => {
             }])
         })
 
-        test('it send null', async () => {
+        it('send null', async () => {
             await microless((req, res) => {
                 send(res, 200, null)
             })({} as any, {} as any, spy)
@@ -168,7 +168,7 @@ describe('microless', () => {
             }])
         })
 
-        test('it return object', async () => {
+        it('return object', async () => {
             await microless((req, res) => {
                 return { msg: 'ok' }
             })({} as any, {} as any, spy)
@@ -182,7 +182,7 @@ describe('microless', () => {
             }])
         })
 
-        test('it throw string', async () => {
+        it('throw string', async () => {
             await microless((req, res) => {
                 throw 'no'
             })({} as any, {} as any, spy)
@@ -190,11 +190,13 @@ describe('microless', () => {
             expect(spy.args[0]).toEqual([null, {
                 statusCode: 500,
                 headers: {},
-                body: 'Internal Server Error',
+                body: {
+                    message: 'Internal Server Error',
+                },
             }])
         })
 
-        test('it throw error', async () => {
+        it('throw error', async () => {
             await microless((req, res) => {
                 let err = new Error('plz signin') as any
                 err.statusCode = 401
@@ -205,11 +207,98 @@ describe('microless', () => {
             expect(spy.args[0]).toEqual([null, {
                 statusCode: 401,
                 headers: {},
-                body: 'Internal Server Error',
+                body: {
+                    name: 'Error',
+                    message: 'Internal Server Error',
+                },
             }])
         })
 
-        test('it throw http error', async () => {
+        it('throw expose error', async () => {
+            await microless((req, res) => {
+                let err = new Error('plz signin') as any
+                err.statusCode = 401
+                err.expose = true
+                throw err
+            })({} as any, {} as any, spy)
+
+            // console.log(spy.args)
+            expect(spy.args[0]).toEqual([null, {
+                statusCode: 401,
+                headers: {},
+                body: {
+                    name: 'Error',
+                    message: 'plz signin',
+                },
+            }])
+        })
+
+        it('throw http 4xx error', async () => {
+            await microless((req, res) => {
+                throw createError(401, 'plz signin')
+            })({} as any, {} as any, spy)
+
+            expect(spy.args[0]).toEqual([null, {
+                statusCode: 401,
+                headers: {},
+                body: {
+                    name: 'UnauthorizedError',
+                    message: 'plz signin',
+                },
+            }])
+        })
+
+        it('throw http 5xx error', async () => {
+            await microless((req, res) => {
+                throw createError(501, 'oops')
+            })({} as any, {} as any, spy)
+
+            expect(spy.args[0]).toEqual([null, {
+                statusCode: 501,
+                headers: {},
+                body: {
+                    name: 'NotImplementedError',
+                    message: 'Internal Server Error',
+                },
+            }])
+        })
+
+        it('throw expose http 5xx error', async () => {
+            await microless((req, res) => {
+                throw createError(501, 'oops', {
+                    expose: true,
+                })
+            })({} as any, {} as any, spy)
+
+            expect(spy.args[0]).toEqual([null, {
+                statusCode: 501,
+                headers: {},
+                body: {
+                    name: 'NotImplementedError',
+                    message: 'oops',
+                },
+            }])
+        })
+
+        it('throw http 4xx error as text', async () => {
+            await microless((req, res) => {
+                throw createError(401, 'plz signin', {
+                    headers: {
+                        'Content-Type': 'text/plain',
+                    },
+                })
+            })({} as any, {} as any, spy)
+
+            expect(spy.args[0]).toEqual([null, {
+                statusCode: 401,
+                headers: {
+                    'content-type': 'text/plain',
+                },
+                body: 'plz signin',
+            }])
+        })
+
+        it('throw http 4xx error as json', async () => {
             await microless((req, res) => {
                 throw createError(401, 'plz signin', {
                     headers: {
@@ -218,17 +307,19 @@ describe('microless', () => {
                 })
             })({} as any, {} as any, spy)
 
-            // console.log(spy.args)
             expect(spy.args[0]).toEqual([null, {
                 statusCode: 401,
                 headers: {
                     'content-type': 'application/json'
                 },
-                body: 'plz signin',
+                body: {
+                    name: 'UnauthorizedError',
+                    message: 'plz signin',
+                },
             }])
         })
 
-        test('it send error', async () => {
+        it('send error', async () => {
             await microless((req, res) => {
                 let err = new Error('plz signin') as any
                 err.statusCode = 401
@@ -238,11 +329,32 @@ describe('microless', () => {
             expect(spy.args[0]).toEqual([null, {
                 statusCode: 401,
                 headers: {},
-                body: 'Internal Server Error',
+                body: {
+                    name: 'Error',
+                    message: 'Internal Server Error',
+                },
             }])
         })
 
-        test('it send http error', async () => {
+        it('send expose error', async () => {
+            await microless((req, res) => {
+                let err = new Error('plz signin') as any
+                err.statusCode = 401
+                err.expose = true
+                sendError(req, res, err)
+            })({} as any, {} as any, spy)
+
+            expect(spy.args[0]).toEqual([null, {
+                statusCode: 401,
+                headers: {},
+                body: {
+                    name: 'Error',
+                    message: 'plz signin',
+                },
+            }])
+        })
+
+        it('send http error', async () => {
             await microless((req, res) => {
                 sendError(req, res, createError(401, 'plz signin'))
             })({} as any, {} as any, spy)
@@ -251,13 +363,57 @@ describe('microless', () => {
             expect(spy.args[0]).toEqual([null, {
                 statusCode: 401,
                 headers: {},
+                body: {
+                    name: 'UnauthorizedError',
+                    message: 'plz signin',
+                },
+            }])
+        })
+
+        it('send http error as text', async () => {
+            await microless((req, res) => {
+                sendError(req, res, createError(401, 'plz signin', {
+                    headers: {
+                        'Content-Type': 'text/plain',
+                    },
+                }))
+            })({} as any, {} as any, spy)
+
+            // console.log(spy.args)
+            expect(spy.args[0]).toEqual([null, {
+                statusCode: 401,
+                headers: {
+                    'content-type': 'text/plain',
+                },
                 body: 'plz signin',
+            }])
+        })
+
+        it('send http error as json', async () => {
+            await microless((req, res) => {
+                sendError(req, res, createError(401, 'plz signin', {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }))
+            })({} as any, {} as any, spy)
+
+            // console.log(spy.args)
+            expect(spy.args[0]).toEqual([null, {
+                statusCode: 401,
+                headers: {
+                    'content-type': 'application/json',
+                },
+                body: {
+                    name: 'UnauthorizedError',
+                    message: 'plz signin',
+                },
             }])
         })
     })
 
     xdescribe('microless compose', () => {
-        test('it accept cloud function arguments', async () => {
+        it('accept cloud function arguments', async () => {
             const enhanceType: Enhancer<Request & { type: string }, Response & {}> = fn => (req, res) => {
                 Object.assign(req, {
                     get type() {
