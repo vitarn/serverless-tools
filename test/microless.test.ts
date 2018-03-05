@@ -1,7 +1,8 @@
 import sinon from 'sinon'
-import microless, { buffer, text, json, send, sendError, compose, Enhancer } from '../microless'
+import microless, { buffer, text, json, send, sendError, createError, compose, Enhancer } from '../microless'
 import { Request } from '../microless/request'
 import { Response } from '../microless/response'
+import { create } from 'domain';
 
 describe('microless', () => {
     describe('buffer', () => {
@@ -110,6 +111,10 @@ describe('microless', () => {
         })
     })
 
+    describe('createError', () => {
+
+    })
+
     describe('microless', () => {
         let spy: sinon.SinonSpy = sinon.spy()
 
@@ -200,6 +205,25 @@ describe('microless', () => {
             expect(spy.args[0]).toEqual([null, {
                 statusCode: 401,
                 headers: {},
+                body: 'Internal Server Error',
+            }])
+        })
+
+        test('it throw http error', async () => {
+            await microless((req, res) => {
+                throw createError(401, 'plz signin', {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            })({} as any, {} as any, spy)
+
+            // console.log(spy.args)
+            expect(spy.args[0]).toEqual([null, {
+                statusCode: 401,
+                headers: {
+                    'content-type': 'application/json'
+                },
                 body: 'plz signin',
             }])
         })
@@ -211,6 +235,19 @@ describe('microless', () => {
                 sendError(req, res, err)
             })({} as any, {} as any, spy)
 
+            expect(spy.args[0]).toEqual([null, {
+                statusCode: 401,
+                headers: {},
+                body: 'Internal Server Error',
+            }])
+        })
+
+        test('it send http error', async () => {
+            await microless((req, res) => {
+                sendError(req, res, createError(401, 'plz signin'))
+            })({} as any, {} as any, spy)
+
+            // console.log(spy.args)
             expect(spy.args[0]).toEqual([null, {
                 statusCode: 401,
                 headers: {},

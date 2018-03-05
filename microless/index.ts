@@ -1,4 +1,5 @@
 import contentType from 'content-type'
+import createError from 'http-errors'
 
 import { APIGatewayEvent, Context, Callback } from '../types'
 
@@ -6,23 +7,10 @@ import { debug } from './common'
 import { Request } from './request'
 import { Response } from './response'
 
-export class MicroError extends Error {
-    status?: number
-    statusCode?: number
-    originalError?: Error
-}
-
 const { NODE_ENV } = process.env
 const DEV = NODE_ENV === 'development'
 
-export const createError = (code, message, original) => {
-    const err = new MicroError(message)
-
-    err.statusCode = code
-    err.originalError = original
-
-    return err
-}
+export { default as createError } from 'http-errors'
 
 export const send = (res: Response, code: number, obj = null) => {
     debug('send %d %o', code, obj)
@@ -72,16 +60,20 @@ export const send = (res: Response, code: number, obj = null) => {
     res.end(str)
 }
 
-export const sendError = (req: Request, res: Response, errorObj: MicroError) => {
-    const statusCode = errorObj.statusCode || errorObj.status
-    const message = statusCode ? errorObj.message : 'Internal Server Error'
+export const sendError = (req: Request, res: Response, err: createError.HttpError) => {
+    const statusCode = err.statusCode || err.status
+    const message = statusCode && err.expose ? err.message : 'Internal Server Error'
 
-    send(res, statusCode || 500, DEV ? errorObj.stack : message)
+    for (let header in err.headers || []) {
+        res.setHeader(header, err.headers[header])
+    }
+
+    send(res, statusCode || 500, DEV ? err.stack : message)
 
     if (!DEV) return
 
-    if (errorObj instanceof Error) {
-        console.error(errorObj.stack)
+    if (err instanceof Error) {
+        console.error(err.stack)
     } else {
         console.warn('thrown error must be an instance Error')
     }
@@ -116,7 +108,7 @@ export const run = async (req: Request, res: Response, fn: (req?: Request, res?:
         debug('run handler...')
         const val = await fn(req, res)
         debug('run handler return %o', val)
-        
+
         if (val === null) {
             send(res, 204, null)
             return
