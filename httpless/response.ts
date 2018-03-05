@@ -3,13 +3,15 @@ import { debug } from './common'
 import { Request } from './request'
 
 export class Response /* extends http.ServerResponse */ {
-    protected callback: Function
-    protected req: Request
-
     statusCode: number = 200
     statusMessage: string
-    private headers: OutgoingHttpHeaders = {}
-    private body: any
+    sendDate = true
+    finished = false
+
+    protected callback: Function
+    protected req: Request
+    protected headers: OutgoingHttpHeaders = {}
+    protected body: any
 
     constructor(callback, req?: Request) {
         this.callback = callback
@@ -17,6 +19,12 @@ export class Response /* extends http.ServerResponse */ {
     }
 
     setHeader(name: string, value: number | string | string[]) {
+        if (this._headersSent) {
+            const err = new Error('Cannot set headers after they are sent to the client')
+            err.name = 'Error [ERR_HTTP_HEADERS_SENT]'
+            throw err
+        }
+
         this.headers[name.toLowerCase()] = value
     }
 
@@ -40,8 +48,32 @@ export class Response /* extends http.ServerResponse */ {
         delete this.headers[name.toLowerCase()]
     }
 
+    private _headersSent = false
+
+    get headersSent() {
+        return this._headersSent
+    }
+
+    writeHead(statusCode: number, statusMessage?: string | OutgoingHttpHeaders, headers?: OutgoingHttpHeaders) {
+        this.statusCode = statusCode
+
+        if (typeof statusMessage === 'string') {
+            this.statusMessage = statusMessage
+        } else if (typeof statusMessage === 'object') {
+            headers = statusMessage
+        }
+
+        for (let header in headers || []) {
+            this.setHeader(header, headers[header])
+        }
+
+        this._headersSent = true
+    }
+
     write(chunk: any): boolean {
         debug('response#write(chunk: %o)', chunk)
+
+        if (this.finished) throw new Error('write after end')
 
         this.body = chunk || ''
 
@@ -50,6 +82,9 @@ export class Response /* extends http.ServerResponse */ {
 
     end(chunk?: any) {
         debug('response#end(chunk: %o)', chunk)
+
+        if (this.finished) return false
+
         if (typeof chunk !== 'undefined') {
             this.write(chunk)
         }
@@ -85,5 +120,9 @@ export class Response /* extends http.ServerResponse */ {
 
         debug('response#end response: %o', response)
         this.callback(null, response)
+
+        this.finished = true
+
+        return false
     }
 }
