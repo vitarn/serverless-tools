@@ -7,6 +7,7 @@ node_js:
 jobs:
   include:
     - stage: test
+      if: branch = master AND type IN (push, pull_request)
       before_install: which npx || yarn global add npx
       script: yarn typecheck && yarn coverage
       after_success: npx codecov
