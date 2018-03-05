@@ -85,7 +85,7 @@ export const sendError = (req: Request, res: Response, err: httpError.HttpError)
         name: err.name,
     })
 
-    if (DEV) Object.assign(obj, {
+    if (DEV && err.stack) Object.assign(obj, {
         stack: err.stack
     })
 
