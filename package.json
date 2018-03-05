@@ -53,14 +53,5 @@
       "json",
       "node"
     ]
-  },
-  "ava": {
-    "files": [
-      "test/**/*.test.js"
-    ],
-    "source": [
-      "**/*.{js}"
-    ],
-    "verbose": true
   }
 }
