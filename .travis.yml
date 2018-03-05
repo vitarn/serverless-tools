@@ -18,12 +18,12 @@ jobs:
       script: skip
       deploy:
         provider: npm
+        tag: next
         skip_cleanup: true
         email: $NPM_EMAIL
         api_key: $NPM_TOKEN
         on:
           branch: master
-          tag: next
           repo: vitarn/serverless-tools
           node: node
     - stage: deploy tag

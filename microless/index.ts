@@ -1,16 +1,15 @@
 import contentType from 'content-type'
-import createError from 'http-errors'
+import httpError from 'http-errors'
 
 import { APIGatewayEvent, Context, Callback } from '../types'
 
 import { debug } from './common'
 import { Request } from './request'
 import { Response } from './response'
+import { create } from 'domain';
 
 const { NODE_ENV } = process.env
 const DEV = NODE_ENV === 'development'
-
-export { default as createError } from 'http-errors'
 
 export const send = (res: Response, code: number, obj = null) => {
     debug('send %d %o', code, obj)
@@ -60,7 +59,9 @@ export const send = (res: Response, code: number, obj = null) => {
     res.end(str)
 }
 
-export const sendError = (req: Request, res: Response, err: createError.HttpError) => {
+export const createError = httpError
+
+export const sendError = (req: Request, res: Response, err: httpError.HttpError) => {
     const statusCode = err.statusCode || err.status
     const message = statusCode && err.expose ? err.message : 'Internal Server Error'
 

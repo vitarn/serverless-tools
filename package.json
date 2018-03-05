@@ -1,6 +1,6 @@
 {
   "name": "serverless-tools",
-  "version": "0.0.7",
+  "version": "0.0.8-alpha.1",
   "scripts": {
     "build": "tsc",
     "test": "jest",
@@ -53,14 +53,5 @@
       "json",
       "node"
     ]
-  },
-  "ava": {
-    "files": [
-      "test/**/*.test.js"
-    ],
-    "source": [
-      "**/*.{js}"
-    ],
-    "verbose": true
   }
 }
