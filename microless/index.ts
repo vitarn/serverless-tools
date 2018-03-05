@@ -21,7 +21,7 @@ export const send = (res: Response, code: number, obj = null) => {
     }
 
     if (Buffer.isBuffer(obj)) {
-        if (!res.getHeader('Content-Type')) {
+        if (!res.hasHeader('Content-Type')) {
             res.setHeader('Content-Type', 'application/octet-stream')
         }
 
@@ -46,7 +46,7 @@ export const send = (res: Response, code: number, obj = null) => {
         //     str = JSON.stringify(obj)
         // }
 
-        if (!res.getHeader('Content-Type')) {
+        if (!res.hasHeader('Content-Type')) {
             res.setHeader('Content-Type', 'application/json; charset=utf-8')
         }
     }
@@ -62,14 +62,35 @@ export const send = (res: Response, code: number, obj = null) => {
 export const createError = httpError
 
 export const sendError = (req: Request, res: Response, err: httpError.HttpError) => {
-    const statusCode = err.statusCode || err.status
+    let statusCode = err.statusCode || err.status
     const message = statusCode && err.expose ? err.message : 'Internal Server Error'
 
     for (let header in err.headers || []) {
         res.setHeader(header, err.headers[header])
     }
 
-    send(res, statusCode || 500, DEV ? err.stack : message)
+    statusCode = statusCode || 500
+
+    const type = res.getHeader('Content-Type') as string
+    if (typeof type === 'string' && /text/.test(type)) {
+        send(res, statusCode, DEV ? err.stack : message)
+        return
+    }
+
+    const obj = {
+        message,
+    }
+
+    if (err.name) Object.assign(obj, {
+        name: err.name,
+    })
+
+    if (DEV) Object.assign(obj, {
+        stack: err.stack
+    })
+
+    res.statusCode = statusCode
+    res.end(obj)
 
     if (!DEV) return
 
@@ -115,8 +136,7 @@ export const run = async (req: Request, res: Response, fn: (req?: Request, res?:
             return
         }
 
-        // Send value if it is not undefined, otherwise assume res.end
-        // will be called later
+        // Send value if it is not undefined, otherwise assume res.end will be called later
         if (undefined !== val) {
             send(res, res.statusCode || 200, val)
         }
