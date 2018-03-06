@@ -1,5 +1,7 @@
 # Serverless Toolboxs
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/vitarn/serverless-tools.svg)](https://greenkeeper.io/)
+
 [![Serverless][ico-serverless]][link-serverless]
 [![License][ico-license]][link-license]
 [![NPM][ico-npm]][link-npm]
