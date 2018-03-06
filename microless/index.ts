@@ -61,36 +61,45 @@ export const send = (res: Response, code: number, obj = null) => {
 
 export const createError = httpError
 
+const ERROR_NOISE = ['statusCode', 'headers', 'expose']
+const cleanError = err => {
+    const obj = { ...err }
+    for (let k of ERROR_NOISE) delete obj[k]
+    return obj
+}
+
 export const sendError = (req: Request, res: Response, err: httpError.HttpError) => {
+    if (!err) {
+        send(res, 500, err)
+        return
+    }
+
     let statusCode = err.statusCode || err.status
-    const message = statusCode && err.expose ? err.message : 'Internal Server Error'
+    const message = statusCode && err.expose !== false ? err.message : 'Internal Server Error'
 
     for (let header in err.headers || []) {
         res.setHeader(header, err.headers[header])
     }
 
-    statusCode = statusCode || 500
+    res.statusCode = statusCode || 500
 
     const type = res.getHeader('Content-Type') as string
     if (typeof type === 'string' && /text/.test(type)) {
-        send(res, statusCode, DEV ? err.stack : message)
-        return
+        res.end(DEV && err.stack || message)
+    } else if (typeof err === 'string') {
+        res.end({ message })
+    } else if (err instanceof Error) {
+        const obj: any = {
+            ...err,
+            message,
+            name: err.name,
+        }
+        delete obj.stack
+        if (DEV && err.stack) obj.stack = err.stack
+        res.end(cleanError(obj))
+    } else {
+        res.end({ error: err })
     }
-
-    const obj = {
-        message,
-    }
-
-    if (err.name) Object.assign(obj, {
-        name: err.name,
-    })
-
-    if (DEV && err.stack) Object.assign(obj, {
-        stack: err.stack
-    })
-
-    res.statusCode = statusCode
-    res.end(obj)
 
     if (!DEV) return
 

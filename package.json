@@ -7,7 +7,7 @@
     "testing": "jest --watch",
     "coverage": "jest --coverage --maxWorkers=4",
     "typecheck": "tsc --noEmit",
-    "release": "git release `node -e \"console.log('v'+require('./package').version)\"` -c",
+    "release": "standard-version",
     "prepack": "tsc --removeComments --inlineSourceMap false | echo shut up"
   },
   "dependencies": {
@@ -31,6 +31,7 @@
     "@types/sinon": "^4.1.4",
     "jest": "^22.4.2",
     "sinon": "^4.4.2",
+    "standard-version": "^4.3.0",
     "ts-jest": "^22.4.0",
     "typescript": "^2.7.2"
   },

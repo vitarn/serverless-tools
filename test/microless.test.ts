@@ -196,6 +196,32 @@ describe('microless', () => {
             }])
         })
 
+        it('throw number', async () => {
+            await microless((req, res) => {
+                throw 1
+            })({} as any, {} as any, spy)
+
+            expect(spy.args[0]).toEqual([null, {
+                statusCode: 500,
+                headers: {},
+                body: {
+                    error: 1,
+                },
+            }])
+        })
+
+        it('throw null', async () => {
+            await microless((req, res) => {
+                throw null
+            })({} as any, {} as any, spy)
+
+            expect(spy.args[0]).toEqual([null, {
+                statusCode: 500,
+                headers: {},
+                body: '',
+            }])
+        })
+
         it('throw error', async () => {
             await microless((req, res) => {
                 let err = new Error('plz signin') as any
@@ -209,7 +235,7 @@ describe('microless', () => {
                 headers: {},
                 body: {
                     name: 'Error',
-                    message: 'Internal Server Error',
+                    message: 'plz signin',
                 },
             }])
         })
@@ -331,7 +357,7 @@ describe('microless', () => {
                 headers: {},
                 body: {
                     name: 'Error',
-                    message: 'Internal Server Error',
+                    message: 'plz signin',
                 },
             }])
         })
