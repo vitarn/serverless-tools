@@ -1,3 +1,17 @@
+# Change Log
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+<a name="0.0.9"></a>
+## [0.0.9](https://github.com/vitarn/serverless-tools/compare/v0.0.6...v0.0.9) (2018-03-06)
+
+
+### Bug Fixes
+
+* **microless:** return error as json object default ([#21](https://github.com/vitarn/serverless-tools/issues/21)) ([0c09ecb](https://github.com/vitarn/serverless-tools/commit/0c09ecb))
+
+
+
 
 v0.0.6 / 2018-03-03
 ===================
