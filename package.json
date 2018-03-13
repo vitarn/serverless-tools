@@ -1,6 +1,7 @@
 {
   "name": "serverless-tools",
   "version": "0.0.9",
+  "description": "Serverless toolbox",
   "scripts": {
     "build": "tsc",
     "test": "jest",
