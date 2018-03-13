@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.0.10"></a>
+## [0.0.10](https://github.com/vitarn/serverless-tools/compare/v0.0.9...v0.0.10) (2018-03-13)
+
+
+
 <a name="0.0.9"></a>
 ## [0.0.9](https://github.com/vitarn/serverless-tools/compare/v0.0.6...v0.0.9) (2018-03-06)
 
