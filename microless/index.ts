@@ -142,11 +142,8 @@ export const run = async (req: Request, res: Response, fn: (req?: Request, res?:
 
         if (val === null) {
             send(res, 204, null)
-            return
-        }
-
-        // Send value if it is not undefined, otherwise assume res.end will be called later
-        if (undefined !== val) {
+        } else if (undefined !== val) {
+            // Send value if it is not undefined, otherwise assume res.end will be called later
             send(res, res.statusCode || 200, val)
         }
     } catch (err) {

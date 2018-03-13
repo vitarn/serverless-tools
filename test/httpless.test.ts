@@ -284,6 +284,19 @@ describe('httpless', () => {
                     isBase64Encoded: true,
                 })).toBe(true)
             })
+
+            it('callback aws json body', () => {
+                req.env = { AWS_LAMBDA_FUNCTION_NAME: 'f' }
+                res.end({ a: 1 })
+
+                expect(req.provider).toBe('aws')
+                expect(spy.args[0]).toEqual([null, {
+                    statusCode: 200,
+                    headers: {
+                    },
+                    body: '{"a":1}',
+                }])
+            })
         })
     })
 })

@@ -85,7 +85,7 @@ export class Response /* extends http.ServerResponse */ {
 
         if (this.finished) return false
 
-        if (typeof chunk !== 'undefined') {
+        if (undefined !== chunk) {
             this.write(chunk)
         }
 
@@ -116,6 +116,15 @@ export class Response /* extends http.ServerResponse */ {
                 body: response.body.toString('base64'),
                 isBase64Encoded: true,
             })
+        }
+
+        if (
+            this.req &&
+            ~['aws'].indexOf(this.req.provider) &&
+            response.body &&
+            typeof response.body !== 'string'
+        ) {
+            response.body = JSON.stringify(response.body)
         }
 
         debug('response#end response: %o', response)
