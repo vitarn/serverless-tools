@@ -41,6 +41,22 @@ export class Request /* extends http.IncomingMessage */ {
         return 'unknown'
     }
 
+    get nodeEnv() {
+        const { env } = this
+
+        if (env.NODE_ENV) return env.NODE_ENV
+
+        const {
+            AWS_LAMBDA_LOG_GROUP_NAME: logName = '',
+            AWS_LAMBDA_FUNCTION_NAME: funcName = ''
+        } = env
+        const fixture = [logName, funcName].join('')
+
+        if (~fixture.indexOf('-dev-')) return 'development'
+
+        return 'production'
+    }
+
     get httpVersion(): string {
         return '1.1'
         // return this._cache['httpVersion']
