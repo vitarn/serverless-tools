@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.0.11"></a>
+## [0.0.11](https://github.com/vitarn/serverless-tools/compare/v0.0.10...v0.0.11) (2018-03-13)
+
+
+### Features
+
+* add httpless req nodeEnv ([#23](https://github.com/vitarn/serverless-tools/issues/23)) ([dde272b](https://github.com/vitarn/serverless-tools/commit/dde272b))
+
+
+
 <a name="0.0.10"></a>
 ## [0.0.10](https://github.com/vitarn/serverless-tools/compare/v0.0.9...v0.0.10) (2018-03-13)
 
