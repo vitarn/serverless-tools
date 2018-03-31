@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.0.14"></a>
+## [0.0.14](https://github.com/vitarn/serverless-tools/compare/v0.0.13...v0.0.14) (2018-03-31)
+
+
+### Bug Fixes
+
+* **microless:** return error message expect expose is false ([509995c](https://github.com/vitarn/serverless-tools/commit/509995c))
+
+
+
 <a name="0.0.13"></a>
 ## [0.0.13](https://github.com/vitarn/serverless-tools/compare/v0.0.12...v0.0.13) (2018-03-13)
 
