@@ -191,7 +191,7 @@ describe('microless', () => {
                 statusCode: 500,
                 headers: {},
                 body: {
-                    message: 'Internal Server Error',
+                    message: 'no',
                 },
             }])
         })
@@ -255,6 +255,25 @@ describe('microless', () => {
                 body: {
                     name: 'Error',
                     message: 'plz signin',
+                },
+            }])
+        })
+
+        it('throw non expose error', async () => {
+            await microless((req, res) => {
+                let err = new Error('plz signin') as any
+                err.statusCode = 401
+                err.expose = false
+                throw err
+            })({} as any, {} as any, spy)
+
+            // console.log(spy.args)
+            expect(spy.args[0]).toEqual([null, {
+                statusCode: 401,
+                headers: {},
+                body: {
+                    name: 'Error',
+                    message: 'Internal Server Error',
                 },
             }])
         })

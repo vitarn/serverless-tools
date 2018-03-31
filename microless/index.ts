@@ -75,7 +75,9 @@ export const sendError = (req: Request, res: Response, err: httpError.HttpError)
     }
 
     let statusCode = err.statusCode || err.status
-    const message = statusCode && err.expose !== false ? err.message : 'Internal Server Error'
+    const message = err.expose !== false
+        ? err.message || err
+        : 'Internal Server Error'
 
     for (let header in err.headers || []) {
         res.setHeader(header, err.headers[header])
@@ -94,8 +96,13 @@ export const sendError = (req: Request, res: Response, err: httpError.HttpError)
             message,
             name: err.name,
         }
-        delete obj.stack
-        if (DEV && err.stack) obj.stack = err.stack
+
+        if (DEV && err.stack) {
+            obj.stack = err.stack
+        } else {
+            delete obj.stack
+        }
+        
         res.end(cleanError(obj))
     } else {
         res.end({ error: err })
