@@ -108,12 +108,14 @@ export const sendError = (req: Request, res: Response, err: httpError.HttpError)
         res.end({ error: err })
     }
 
-    if (!DEV) return
-
     if (err instanceof Error) {
-        console.error(err.stack)
+        if (DEV) {
+            console.error(err.stack)
+        } else {
+            console.error(err.message)
+        }
     } else {
-        console.warn('thrown error must be an instance Error')
+        console.warn('thrown error should be an Error but got', err)
     }
 }
 
