@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.0.15"></a>
+## [0.0.15](https://github.com/vitarn/serverless-tools/compare/v0.0.14...v0.0.15) (2018-04-01)
+
+
+### Bug Fixes
+
+* log sent error ([7d962bc](https://github.com/vitarn/serverless-tools/commit/7d962bc))
+
+
+
 <a name="0.0.14"></a>
 ## [0.0.14](https://github.com/vitarn/serverless-tools/compare/v0.0.13...v0.0.14) (2018-03-31)
 
