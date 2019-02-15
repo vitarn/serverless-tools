@@ -41,7 +41,7 @@
     "@types/sinon": "^4.3.0",
     "jest": "^22.4.3",
     "sinon": "^4.5.0",
-    "standard-version": "^4.3.0",
+    "standard-version": "^5.0.0",
     "ts-jest": "^22.4.2",
     "typescript": "^2.8.1"
   },
